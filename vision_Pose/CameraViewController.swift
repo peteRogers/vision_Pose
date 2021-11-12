@@ -11,24 +11,43 @@ import UIKit
 import AVFoundation
 import Vision
 
-protocol CameraViewControllerOutputDelegate: AnyObject {
-    func cameraViewController(_ controller: CameraViewController, didReceiveBuffer buffer: CMSampleBuffer, orientation: CGImagePropertyOrientation)
-}
+//protocol CameraViewControllerOutputDelegate: AnyObject {
+//    func cameraViewController(_ controller: CameraViewController, didReceiveBuffer buffer: CMSampleBuffer, orientation: CGImagePropertyOrientation)
+//}
 
 class CameraViewController: UIViewController {
     
-    weak var outputDelegate: CameraViewControllerOutputDelegate?
+  //  weak var outputDelegate: CameraViewControllerOutputDelegate?
     private let videoDataOutputQueue = DispatchQueue(label: "CameraFeedDataOutput", qos: .userInitiated,
                                                      attributes: [], autoreleaseFrequency: .workItem)
 
     // Live camera feed management
     private var cameraFeedView: CameraFeedView!
     private var cameraFeedSession: AVCaptureSession?
+    var request: VNDetectHumanRectanglesRequest!
+    
+    var visionToAVFTransform = CGAffineTransform.identity
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        //startObservingStateChanges()
+        request = VNDetectHumanRectanglesRequest(completionHandler: recognizeHumans)
     }
+    
+    func recognizeHumans(request:VNRequest, error: Error?){
+      
+        var redBoxes = [CGRect]()
+        guard let results = request.results as? [VNHumanObservation] else {
+            return
+        }
+        for result in results{
+           
+            print(result.boundingBox.minX)
+            redBoxes.append(result.boundingBox)
+            show(boxGroups: [(color: UIColor.red.cgColor, boxes: redBoxes)])
+        
+    }
+    }
+    
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -40,7 +59,7 @@ class CameraViewController: UIViewController {
     func setupAVSession() throws {
         // Create device discovery session for a wide angle camera
         let wideAngle = AVCaptureDevice.DeviceType.builtInWideAngleCamera
-        let discoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [wideAngle], mediaType: .video, position: .unspecified)
+        let discoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [wideAngle], mediaType: .video, position: .front)
         
         // Select a video device, make an input
         guard let videoDevice = discoverySession.devices.first else {
@@ -70,7 +89,7 @@ class CameraViewController: UIViewController {
             return
            // throw AppError.captureSessionSetup(reason: "Could not add video device input to the session")
         }
-        session.addInput(deviceInput)
+        session.addInput(deviceInput) 
         
         let dataOutput = AVCaptureVideoDataOutput()
         if session.canAddOutput(dataOutput) {
@@ -107,52 +126,8 @@ class CameraViewController: UIViewController {
         cameraFeedSession?.startRunning()
     }
     
-    // This helper function is used to convert rects returned by Vision to the video content rect coordinates.
-    //
-    // The video content rect (camera preview or pre-recorded video)
-    // is scaled to fit into the view controller's view frame preserving the video's aspect ratio
-    // and centered vertically and horizontally inside the view.
-    //
-    // Vision coordinates have origin at the bottom left corner and are normalized from 0 to 1 for both dimensions.
-    //
-    func viewRectForVisionRect(_ visionRect: CGRect) -> CGRect {
-        let flippedRect = visionRect.applying(CGAffineTransform.verticalFlip)
-        let viewRect: CGRect
-       // if cameraFeedSession != nil {
-            viewRect = cameraFeedView.viewRectConverted(fromNormalizedContentsRect: flippedRect)
-      
-            return viewRect
-        //}
-   //  return nil
-    }
 
-    // This helper function is used to convert points returned by Vision to the video content rect coordinates.
-    //
-    // The video content rect (camera preview or pre-recorded video)
-    // is scaled to fit into the view controller's view frame preserving the video's aspect ratio
-    // and centered vertically and horizontally inside the view.
-    //
-    // Vision coordinates have origin at the bottom left corner and are normalized from 0 to 1 for both dimensions.
-    //
-    
-    func detectedBodyPose(request: VNRequest, error: Error?) {
-        print("fjjfoej")
-        guard let bodyPoseResults = request.results as? [VNHumanBodyPoseObservation]
-          else { return }
-        guard let bodyParts = try?
-                bodyPoseResults.first?.recognizedPoints(.all)
-        else { return }
-        DispatchQueue.main.async {
-            print( bodyParts[.nose]!.location)
-        }
-    }
-    
-    func viewPointForVisionPoint(_ visionPoint: CGPoint) -> CGPoint {
-        let flippedPoint = visionPoint.applying(CGAffineTransform.verticalFlip)
-        let viewPoint: CGPoint
-        viewPoint = cameraFeedView.viewPointConverted(fromNormalizedContentsPoint: flippedPoint)
-        return viewPoint
-    }
+
 
     func setupVideoOutputView(_ videoOutputView: UIView) {
         videoOutputView.translatesAutoresizingMaskIntoConstraints = false
@@ -165,14 +140,64 @@ class CameraViewController: UIViewController {
             videoOutputView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
+    
+    // Draw a box on screen. Must be called from main queue.
+    var boxLayer = [CAShapeLayer]()
+    func draw(rect: CGRect, color: CGColor) {
+        let layer = CAShapeLayer()
+        layer.opacity = 1
+        layer.borderColor = color
+        layer.borderWidth = 2.5
+        layer.frame = rect
+        boxLayer.append(layer)
+        cameraFeedView.previewLayer.insertSublayer(layer, at: 1)
+    }
+    
+    // Remove all drawn boxes. Must be called on main queue.
+    func removeBoxes() {
+        for layer in boxLayer {
+            layer.removeFromSuperlayer()
+        }
+        boxLayer.removeAll()
+    }
+    
+    typealias ColoredBoxGroup = (color: CGColor, boxes: [CGRect])
+    
+    // Draws groups of colored boxes.
+    func show(boxGroups: [ColoredBoxGroup]) {
+        DispatchQueue.main.async {
+            let layer = self.cameraFeedView.previewLayer
+            self.removeBoxes()
+            for boxGroup in boxGroups {
+                let color = boxGroup.color
+                for box in boxGroup.boxes {
+                    let rect = layer!.layerRectConverted(fromMetadataOutputRect: box.applying(self.visionToAVFTransform))
+                    
+                    self.draw(rect: rect, color: color)
+                }
+            }
+        }
+    }
 }
+
+
+
 
 
 
 extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-       outputDelegate?.cameraViewController(self, didReceiveBuffer: sampleBuffer, orientation: .up)
-        let visionHandler = VNImageRequestHandler(cmSampleBuffer: buffer, orientation: orientation, options: [:])
+      // outputDelegate?.cameraViewController(self, didReceiveBuffer: sampleBuffer, orientation: .up)
+        if let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) {
+            let requestHandler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: .up, options: [:])
+            do {
+                try requestHandler.perform([request])
+            } catch {
+                print(error)
+            }
+            
+        }
+       // let visionHandler = VNImageRequestHandler(cmSampleBuffer: buffer, orientation: orientation, options: [:])
         //let humanBodyRequest = VNDetectHumanBodyPoseRequest(completionHandler: detectedBodyPose)
         //print(humanBodyRequest.results)
        // print("fokf")

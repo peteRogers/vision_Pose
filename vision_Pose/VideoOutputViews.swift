@@ -18,7 +18,7 @@ protocol NormalizedGeometryConverting {
 
 // MARK: - View to display live camera feed
 class CameraFeedView: UIView, NormalizedGeometryConverting {
-    private var previewLayer: AVCaptureVideoPreviewLayer!
+     var previewLayer: AVCaptureVideoPreviewLayer!
     
     override class var layerClass: AnyClass {
         return AVCaptureVideoPreviewLayer.self
