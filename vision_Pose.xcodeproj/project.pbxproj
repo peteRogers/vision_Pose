@@ -15,7 +15,6 @@
 		2F3CE937273B1DCB00156D9E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2F3CE935273B1DCB00156D9E /* LaunchScreen.storyboard */; };
 		2F3CE93F273B1E0300156D9E /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3CE93E273B1E0300156D9E /* CameraViewController.swift */; };
 		2F3CE941273B201800156D9E /* VideoOutputViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3CE940273B201800156D9E /* VideoOutputViews.swift */; };
-		2F3CE943273B272900156D9E /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3CE942273B272900156D9E /* Common.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,7 +28,6 @@
 		2F3CE938273B1DCB00156D9E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2F3CE93E273B1E0300156D9E /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		2F3CE940273B201800156D9E /* VideoOutputViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoOutputViews.swift; sourceTree = "<group>"; };
-		2F3CE942273B272900156D9E /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,7 +64,6 @@
 				2F3CE92C273B1DC900156D9E /* SceneDelegate.swift */,
 				2F3CE92E273B1DC900156D9E /* ViewController.swift */,
 				2F3CE93E273B1E0300156D9E /* CameraViewController.swift */,
-				2F3CE942273B272900156D9E /* Common.swift */,
 				2F3CE930273B1DC900156D9E /* Main.storyboard */,
 				2F3CE940273B201800156D9E /* VideoOutputViews.swift */,
 				2F3CE933273B1DCB00156D9E /* Assets.xcassets */,
@@ -151,7 +148,6 @@
 				2F3CE93F273B1E0300156D9E /* CameraViewController.swift in Sources */,
 				2F3CE941273B201800156D9E /* VideoOutputViews.swift in Sources */,
 				2F3CE92B273B1DC900156D9E /* AppDelegate.swift in Sources */,
-				2F3CE943273B272900156D9E /* Common.swift in Sources */,
 				2F3CE92D273B1DC900156D9E /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

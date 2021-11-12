@@ -11,13 +11,14 @@ import UIKit
 import AVFoundation
 
 // MARK: - Coordinates conversion
-protocol NormalizedGeometryConverting {
-    func viewRectConverted(fromNormalizedContentsRect normalizedRect: CGRect) -> CGRect
-    func viewPointConverted(fromNormalizedContentsPoint normalizedPoint: CGPoint) -> CGPoint
-}
+//protocol NormalizedGeometryConverting {
+//    func viewRectConverted(fromNormalizedContentsRect normalizedRect: CGRect) -> CGRect
+//    func viewPointConverted(fromNormalizedContentsPoint normalizedPoint: CGPoint) -> CGPoint
+//}
 
 // MARK: - View to display live camera feed
-class CameraFeedView: UIView, NormalizedGeometryConverting {
+class CameraFeedView: UIView {
+   // class CameraFeedView: UIView, NormalizedGeometryConverting {
      var previewLayer: AVCaptureVideoPreviewLayer!
     
     override class var layerClass: AnyClass {
@@ -36,12 +37,12 @@ class CameraFeedView: UIView, NormalizedGeometryConverting {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func viewRectConverted(fromNormalizedContentsRect normalizedRect: CGRect) -> CGRect {
-        return previewLayer.layerRectConverted(fromMetadataOutputRect: normalizedRect)
-    }
-
-    func viewPointConverted(fromNormalizedContentsPoint normalizedPoint: CGPoint) -> CGPoint {
-        return previewLayer.layerPointConverted(fromCaptureDevicePoint: normalizedPoint)
-    }
+//    func viewRectConverted(fromNormalizedContentsRect normalizedRect: CGRect) -> CGRect {
+//        return previewLayer.layerRectConverted(fromMetadataOutputRect: normalizedRect)
+//    }
+//
+//    func viewPointConverted(fromNormalizedContentsPoint normalizedPoint: CGPoint) -> CGPoint {
+//        return previewLayer.layerPointConverted(fromCaptureDevicePoint: normalizedPoint)
+//    }
 }
 

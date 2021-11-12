@@ -10,7 +10,7 @@
 import UIKit
 import AVFoundation
 import Vision
-
+import Combine
 //protocol CameraViewControllerOutputDelegate: AnyObject {
 //    func cameraViewController(_ controller: CameraViewController, didReceiveBuffer buffer: CMSampleBuffer, orientation: CGImagePropertyOrientation)
 //}
@@ -24,12 +24,18 @@ class CameraViewController: UIViewController {
     // Live camera feed management
     private var cameraFeedView: CameraFeedView!
     private var cameraFeedSession: AVCaptureSession?
+    
+    
+    
+   
     var request: VNDetectHumanRectanglesRequest!
     
     var visionToAVFTransform = CGAffineTransform.identity
 
     override func viewDidLoad() {
         super.viewDidLoad()
+       
+       // pass("foof")
         request = VNDetectHumanRectanglesRequest(completionHandler: recognizeHumans)
     }
     
@@ -48,7 +54,7 @@ class CameraViewController: UIViewController {
     }
     }
     
-    
+   
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         // Stop capture session if it's running
@@ -168,6 +174,8 @@ class CameraViewController: UIViewController {
         DispatchQueue.main.async {
             let layer = self.cameraFeedView.previewLayer
             self.removeBoxes()
+           
+           
             for boxGroup in boxGroups {
                 let color = boxGroup.color
                 for box in boxGroup.boxes {

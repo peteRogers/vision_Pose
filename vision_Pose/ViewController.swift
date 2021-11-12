@@ -6,12 +6,14 @@
 //
 
 import UIKit
+import Combine
 
 class ViewController: UIViewController {
 
     
     private var cameraViewController: CameraViewController!
     
+   
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,6 +25,7 @@ class ViewController: UIViewController {
         view.addSubview(cameraViewController.view)
         cameraViewController.endAppearanceTransition()
         cameraViewController.didMove(toParent: self)
+
         // Do any additional setup after loading the view.
     }
 
@@ -30,10 +33,14 @@ class ViewController: UIViewController {
         do {
        
             try cameraViewController.setupAVSession()
-       
+            
                    } catch {
                       // AppError.display(error, inViewController: self)
                    }
+    }
+    
+    func magic(text:String){
+        
     }
 
 }
