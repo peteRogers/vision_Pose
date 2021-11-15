@@ -10,7 +10,7 @@
 import UIKit
 import AVFoundation
 import Vision
-import Combine
+
 //protocol CameraViewControllerOutputDelegate: AnyObject {
 //    func cameraViewController(_ controller: CameraViewController, didReceiveBuffer buffer: CMSampleBuffer, orientation: CGImagePropertyOrientation)
 //}
@@ -24,9 +24,7 @@ class CameraViewController: UIViewController {
     // Live camera feed management
     private var cameraFeedView: CameraFeedView!
     private var cameraFeedSession: AVCaptureSession?
-    
-    
-    
+  
    
     var request: VNDetectHumanRectanglesRequest!
     

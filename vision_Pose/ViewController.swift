@@ -13,6 +13,11 @@ class ViewController: UIViewController {
     
     private var cameraViewController: CameraViewController!
     
+    let hey:(String) -> () = {
+        name in
+        print("hey \(name)")
+    }
+    
    
     
     override func viewDidLoad() {
