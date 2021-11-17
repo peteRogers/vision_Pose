@@ -24,32 +24,65 @@ class CameraViewController: UIViewController {
     // Live camera feed management
     private var cameraFeedView: CameraFeedView!
     private var cameraFeedSession: AVCaptureSession?
-  
-   
     var request: VNDetectHumanRectanglesRequest!
-    
     var visionToAVFTransform = CGAffineTransform.identity
+    
+    var ble = BLEController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
        
        // pass("foof")
         request = VNDetectHumanRectanglesRequest(completionHandler: recognizeHumans)
+       // let value = UIInterfaceOrientation.landscapeRight.rawValue
+       // UIDevice.current.setValue(value, forKey: "orientation")
+    }
+    
+    func launchBLE(){
+        print("launch ble")
+        ble.connectionChanged = { [unowned self] value in
+            let v = value as connectionStatus
+            if(v == .disconnected){
+                self.quitCamera()
+                print("disconnected")
+            }
+            //self.stateManager(state: value)
+        }
+        
+    }
+    
+    func quitCamera(){
+       print("quitting")
+            
+            if(ble.isConnected() == true){
+                ble.disconnect()
+               // triedButFailed = false
+            }
+        
+//            videoView?.videoCapture.stop()
+//            videoView?.removeFromSuperview()
+//            videoView = nil
+//            UIApplication.shared.isIdleTimerDisabled = false
+//            egg.stopAll()
+       // self.dismiss(animated: true, completion: nil)
+        self.cameraFeedView.removeFromSuperview()
+        self.dismiss(animated: true, completion: nil)
+            
+  
     }
     
     func recognizeHumans(request:VNRequest, error: Error?){
-      
+        
         var redBoxes = [CGRect]()
         guard let results = request.results as? [VNHumanObservation] else {
             return
         }
         for result in results{
-           
-            print(result.boundingBox.minX)
+          //  print(result.boundingBox.minX)
             redBoxes.append(result.boundingBox)
             show(boxGroups: [(color: UIColor.red.cgColor, boxes: redBoxes)])
-        
-    }
+            
+        }
     }
     
    
@@ -128,9 +161,23 @@ class CameraViewController: UIViewController {
         cameraFeedView = CameraFeedView(frame: view.bounds, session: session, videoOrientation: videoOrientation)
         setupVideoOutputView(cameraFeedView)
         cameraFeedSession?.startRunning()
+      
     }
     
-
+    func createUI(){
+        let b = UIButton(frame: CGRect(x: self.view.frame.midX-100, y: self.view.frame.midY, width: 200, height: 50))
+        b.setTitle("QUIT", for: .normal)
+        self.view.addSubview(b)
+        b.addTarget(self,
+                         action: #selector(quitAction),
+                         for: .touchUpInside)
+    }
+    
+    
+    @objc func quitAction() {
+       print("Button pressed")
+        quitCamera()
+    }
 
 
     func setupVideoOutputView(_ videoOutputView: UIView) {
@@ -143,6 +190,7 @@ class CameraViewController: UIViewController {
             videoOutputView.topAnchor.constraint(equalTo: view.topAnchor),
             videoOutputView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+        createUI()
     }
     
     // Draw a box on screen. Must be called from main queue.

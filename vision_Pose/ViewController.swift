@@ -13,11 +13,6 @@ class ViewController: UIViewController {
     
     private var cameraViewController: CameraViewController!
     
-    let hey:(String) -> () = {
-        name in
-        print("hey \(name)")
-    }
-    
    
     
     override func viewDidLoad() {
@@ -26,7 +21,8 @@ class ViewController: UIViewController {
         cameraViewController = CameraViewController()
         cameraViewController.view.frame = view.bounds
         addChild(cameraViewController)
-        cameraViewController.beginAppearanceTransition(true, animated: true)
+       
+       cameraViewController.beginAppearanceTransition(true, animated: true)
         view.addSubview(cameraViewController.view)
         cameraViewController.endAppearanceTransition()
         cameraViewController.didMove(toParent: self)
@@ -42,6 +38,9 @@ class ViewController: UIViewController {
                    } catch {
                       // AppError.display(error, inViewController: self)
                    }
+       // cameraViewController.view.frame = view.bounds
+       // camer
+       // self.present(cameraViewController, animated: true, completion: nil)
     }
     
     func magic(text:String){

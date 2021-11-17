@@ -31,7 +31,7 @@ class CameraFeedView: UIView {
         previewLayer.session = session
         previewLayer.videoGravity = .resizeAspect
         previewLayer.connection?.videoOrientation = videoOrientation
-       
+        
     }
     
     required init?(coder: NSCoder) {
