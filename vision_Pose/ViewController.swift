@@ -8,39 +8,53 @@
 import UIKit
 import Combine
 
+
 class ViewController: UIViewController {
 
     
-    private var cameraViewController: CameraViewController!
+    private var cameraViewController: CameraViewController?
     
-   
+    @IBOutlet weak var connectButton: UIButton!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        cameraViewController = CameraViewController()
-        cameraViewController.view.frame = view.bounds
-        addChild(cameraViewController)
        
-       cameraViewController.beginAppearanceTransition(true, animated: true)
-        view.addSubview(cameraViewController.view)
-        cameraViewController.endAppearanceTransition()
-        cameraViewController.didMove(toParent: self)
-
+       // addChild(cameraViewController)
+       
+      // cameraViewController.beginAppearanceTransition(true, animated: true)
+        //view.addSubview(cameraViewController.view)
+      //  cameraViewController.endAppearanceTransition()
+       // cameraViewController.didMove(toParent: self)
+        
         // Do any additional setup after loading the view.
     }
 
-    override func viewDidAppear(_ animated: Bool) {
+    @IBAction func actionConnect(_ sender: UIButton) {
+        cameraViewController = CameraViewController()
+        cameraViewController?.view.frame = view.bounds
         do {
        
-            try cameraViewController.setupAVSession()
+            try cameraViewController?.setupAVSession()
             
                    } catch {
                       // AppError.display(error, inViewController: self)
                    }
        // cameraViewController.view.frame = view.bounds
        // camer
-       // self.present(cameraViewController, animated: true, completion: nil)
+        cameraViewController?.view.frame = view.bounds
+        
+        self.present(cameraViewController!, animated: true, completion: nil)
+        
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        let joy = JoyStickController()
+        joy.view.frame = view.bounds
+       
+        joy.view.frame = view.bounds
+        
+        self.present(joy, animated: true, completion: nil)
     }
     
     func magic(text:String){

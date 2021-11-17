@@ -26,11 +26,12 @@ class CameraFeedView: UIView {
     }
     
     init(frame: CGRect, session: AVCaptureSession, videoOrientation: AVCaptureVideoOrientation) {
+       // print(videoOrientation.rawValue)
         super.init(frame: frame)
         previewLayer = layer as? AVCaptureVideoPreviewLayer
         previewLayer.session = session
         previewLayer.videoGravity = .resizeAspect
-        previewLayer.connection?.videoOrientation = videoOrientation
+        previewLayer.connection?.videoOrientation = .landscapeRight
         
     }
     

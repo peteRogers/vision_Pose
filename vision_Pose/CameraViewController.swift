@@ -36,6 +36,7 @@ class CameraViewController: UIViewController {
         request = VNDetectHumanRectanglesRequest(completionHandler: recognizeHumans)
        // let value = UIInterfaceOrientation.landscapeRight.rawValue
        // UIDevice.current.setValue(value, forKey: "orientation")
+      //  print()
     }
     
     func launchBLE(){
@@ -67,7 +68,7 @@ class CameraViewController: UIViewController {
        // self.dismiss(animated: true, completion: nil)
         self.cameraFeedView.removeFromSuperview()
         self.dismiss(animated: true, completion: nil)
-            
+        self.removeFromParent()
   
     }
     
@@ -90,7 +91,7 @@ class CameraViewController: UIViewController {
         super.viewDidDisappear(animated)
         // Stop capture session if it's running
         cameraFeedSession?.stopRunning()
-       
+       print("view disapeared maybe")
     }
     
     func setupAVSession() throws {
@@ -156,6 +157,8 @@ class CameraViewController: UIViewController {
         default:
             videoOrientation = .portrait
         }
+        
+        print(videoOrientation)
         
         // Create and setup video feed view
         cameraFeedView = CameraFeedView(frame: view.bounds, session: session, videoOrientation: videoOrientation)
