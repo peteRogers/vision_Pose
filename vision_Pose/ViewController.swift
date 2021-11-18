@@ -16,6 +16,7 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var connectButton: UIButton!
     
+    @IBOutlet weak var manualConnectButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +32,16 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
 
+    @IBAction func actionConnectManual(_ sender: UIButton) {
+        let joy = JoyStickController()
+        joy.view.frame = view.bounds
+       
+        joy.view.frame = view.bounds
+        
+        self.present(joy, animated: true, completion: nil)
+    }
+    
+    
     @IBAction func actionConnect(_ sender: UIButton) {
         cameraViewController = CameraViewController()
         cameraViewController?.view.frame = view.bounds
@@ -49,12 +60,7 @@ class ViewController: UIViewController {
         
     }
     override func viewDidAppear(_ animated: Bool) {
-        let joy = JoyStickController()
-        joy.view.frame = view.bounds
        
-        joy.view.frame = view.bounds
-        
-        self.present(joy, animated: true, completion: nil)
     }
     
     func magic(text:String){

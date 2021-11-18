@@ -37,10 +37,12 @@ class CameraViewController: UIViewController {
        // let value = UIInterfaceOrientation.landscapeRight.rawValue
        // UIDevice.current.setValue(value, forKey: "orientation")
       //  print()
+        launchBLE()
     }
     
     func launchBLE(){
         print("launch ble")
+        ble.connect()
         ble.connectionChanged = { [unowned self] value in
             let v = value as connectionStatus
             if(v == .disconnected){
