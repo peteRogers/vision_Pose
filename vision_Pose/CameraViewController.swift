@@ -24,6 +24,7 @@ class CameraViewController: UIViewController {
     // Live camera feed management
     private var cameraFeedView: CameraFeedView!
     private var cameraFeedSession: AVCaptureSession?
+    private var stateView: StateView?
     var request: VNDetectHumanRectanglesRequest!
     var visionToAVFTransform = CGAffineTransform.identity
     
@@ -38,6 +39,7 @@ class CameraViewController: UIViewController {
        // UIDevice.current.setValue(value, forKey: "orientation")
       //  print()
         launchBLE()
+       
     }
     
     func launchBLE(){
@@ -50,6 +52,8 @@ class CameraViewController: UIViewController {
                 print("disconnected")
             }
             //self.stateManager(state: value)
+            stateView?.setStatus(con: v)
+            print(v)
         }
         
     }
@@ -170,12 +174,15 @@ class CameraViewController: UIViewController {
     }
     
     func createUI(){
-        let b = UIButton(frame: CGRect(x: self.view.frame.midX-100, y: self.view.frame.midY, width: 200, height: 50))
-        b.setTitle("QUIT", for: .normal)
-        self.view.addSubview(b)
-        b.addTarget(self,
-                         action: #selector(quitAction),
-                         for: .touchUpInside)
+ 
+        stateView = StateView.init(frame: CGRect(x: 0,y: self.view.frame.height/32, width:self.view.frame.width/2, height: self.view.frame.height / 6))
+        stateView?.center.x = self.view.frame.midX
+        //stateView?.backgroundColor = .blue
+        self.view.addSubview(stateView!)
+        stateView?.killConnection = {
+            self.quitAction()
+        
+        }
     }
     
     

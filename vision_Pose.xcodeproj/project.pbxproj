@@ -17,6 +17,7 @@
 		2F3CE941273B201800156D9E /* VideoOutputViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3CE940273B201800156D9E /* VideoOutputViews.swift */; };
 		2F8DF9502742C5DA008C36FC /* BLEController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F8DF94F2742C5DA008C36FC /* BLEController.swift */; };
 		2F8DF9522743DC65008C36FC /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F8DF9512743DC65008C36FC /* Common.swift */; };
+		613094912747D08A00997C3A /* StateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 613094902747D08900997C3A /* StateView.swift */; };
 		6139157A2745293700FF65CB /* JoyStickController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 613915792745293700FF65CB /* JoyStickController.swift */; };
 		6139157D27452CAD00FF65CB /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6139157C27452CAD00FF65CB /* SnapKit */; };
 /* End PBXBuildFile section */
@@ -34,6 +35,7 @@
 		2F3CE940273B201800156D9E /* VideoOutputViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoOutputViews.swift; sourceTree = "<group>"; };
 		2F8DF94F2742C5DA008C36FC /* BLEController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEController.swift; sourceTree = "<group>"; };
 		2F8DF9512743DC65008C36FC /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
+		613094902747D08900997C3A /* StateView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateView.swift; sourceTree = "<group>"; };
 		613915792745293700FF65CB /* JoyStickController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoyStickController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -74,6 +76,7 @@
 				613915792745293700FF65CB /* JoyStickController.swift */,
 				2F8DF94F2742C5DA008C36FC /* BLEController.swift */,
 				2F8DF9512743DC65008C36FC /* Common.swift */,
+				613094902747D08900997C3A /* StateView.swift */,
 				2F3CE93E273B1E0300156D9E /* CameraViewController.swift */,
 				2F3CE930273B1DC900156D9E /* Main.storyboard */,
 				2F3CE940273B201800156D9E /* VideoOutputViews.swift */,
@@ -167,6 +170,7 @@
 				2F3CE92B273B1DC900156D9E /* AppDelegate.swift in Sources */,
 				2F3CE92D273B1DC900156D9E /* SceneDelegate.swift in Sources */,
 				2F8DF9502742C5DA008C36FC /* BLEController.swift in Sources */,
+				613094912747D08A00997C3A /* StateView.swift in Sources */,
 				2F8DF9522743DC65008C36FC /* Common.swift in Sources */,
 				6139157A2745293700FF65CB /* JoyStickController.swift in Sources */,
 			);

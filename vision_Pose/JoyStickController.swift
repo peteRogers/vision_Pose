@@ -17,8 +17,8 @@ class JoyStickController: UIViewController {
     let bnCenterView = UIView()
     let buttonView = UIView()
     
-    let myCyan = UIColor(red: 0, green: 246/255, blue: 255/255, alpha: 1)
-    let myMagenta = UIColor(red: 1, green: 0, blue: 106/255, alpha: 1)
+    //let myCyan = UIColor(red: 0, green: 246/255, blue: 255/255, alpha: 1)
+   // let myMagenta = UIColor(red: 1, green: 0, blue: 106/255, alpha: 1)
     override func viewDidLoad() {
         super.viewDidLoad()
         let js = 2.0
@@ -33,7 +33,7 @@ class JoyStickController: UIViewController {
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(dragJoystick(_:)))
         joystickView.isUserInteractionEnabled = true
         joystickView.addGestureRecognizer(panGesture)
-        joystickView.backgroundColor = myMagenta
+        joystickView.backgroundColor = .myMagenta
         joystickView.layer.cornerRadius = CGFloat((jsCenterView.frame.size.width / js)/2)
         joystickView.frame = CGRect(x: jsCenterView.frame.midX-((jsCenterView.frame.size.width/js)/2), y: view.frame.midY-((jsCenterView.frame.size.width/js)/1.25), width: jsCenterView.frame.size.width/js, height: jsCenterView.frame.size.width/js)
         view.addSubview(joystickView)
@@ -51,13 +51,13 @@ class JoyStickController: UIViewController {
         pushGesture.minimumPressDuration = 0.1
         buttonView.isUserInteractionEnabled = true
         buttonView.addGestureRecognizer(pushGesture)
-        buttonView.backgroundColor = myMagenta
+        buttonView.backgroundColor = .myMagenta
         buttonView.layer.cornerRadius = CGFloat((bnCenterView.frame.size.width / (js/1.5))/2)
         buttonView.frame = CGRect(x: bnCenterView.frame.midX-((bnCenterView.frame.size.width/(js/1.5))/2),
                                   y: view.frame.midY-((bnCenterView.frame.size.width/js)/1.25),
                                   width: bnCenterView.frame.size.width/(js/1.5),
                                   height: bnCenterView.frame.size.width/(js/1.5))
-        buttonView.center.y = bnCenterView.frame.midY - (bnCenterView.frame.height/8)
+        buttonView.center.y = bnCenterView.frame.midY - (bnCenterView.frame.height/16)
         view.addSubview(buttonView)
         
         let button = UIButton(frame: CGRect(x: 20, y: 20, width: 200, height: 60))
@@ -66,6 +66,7 @@ class JoyStickController: UIViewController {
          button.setTitleColor(UIColor.black, for: .normal)
          button.addTarget(self, action: #selector(self.buttonTapped), for: .touchUpInside)
         self.view.addSubview(button)
+        self.view.backgroundColor = .black
     }
     
    @objc func buttonTapped(sender:UIButton!) {
@@ -75,15 +76,15 @@ class JoyStickController: UIViewController {
     @objc func pushGesture(_ sender: UIGestureRecognizer){
         
         //print("tapped")
-        buttonView.backgroundColor = myCyan
+        buttonView.backgroundColor = .myCyan
         if(sender.state == UIGestureRecognizer.State.ended){
-            buttonView.backgroundColor = myMagenta
+            buttonView.backgroundColor = .myMagenta
             UIView.animate(withDuration: 0.25, delay: 0.0, options: .curveEaseInOut, animations: {
-                self.buttonView.center.y = self.bnCenterView.frame.midY - (self.bnCenterView.frame.height/8)
+                self.buttonView.center.y = self.bnCenterView.frame.midY - (self.bnCenterView.frame.height/16)
                 //self.joystickView.backgroundColor = self.myMagenta
             })
         }else{
-            UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveEaseInOut, animations: {
+            UIView.animate(withDuration: 0.05, delay: 0.0, options: .curveEaseInOut, animations: {
                 self.buttonView.center.y = self.bnCenterView.frame.midY
                 //self.joystickView.backgroundColor = self.myMagenta
             })
@@ -98,7 +99,7 @@ class JoyStickController: UIViewController {
         }else if(pos < jsCenterView.frame.midX - jsCenterView.frame.width/2){
             pos = jsCenterView.frame.midX - jsCenterView.frame.width/2
         }
-        joystickView.backgroundColor = myCyan
+        joystickView.backgroundColor = .myCyan
         joystickView.layer.removeAllAnimations()
         joystickView.center.x = pos
         let p = abs(pos-jsCenterView.frame.midX)
@@ -106,7 +107,7 @@ class JoyStickController: UIViewController {
         if(sender.state == UIGestureRecognizer.State.ended){
             UIView.animate(withDuration: p/500, delay: 0.0, options: .curveEaseInOut, animations: {
                 self.joystickView.center.x = self.jsCenterView.frame.midX
-                self.joystickView.backgroundColor = self.myMagenta
+                self.joystickView.backgroundColor = .myMagenta
             })
         }
     }

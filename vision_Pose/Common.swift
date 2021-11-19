@@ -23,3 +23,14 @@ enum connectionStatus {
     case preview
     case unauthorized
 }
+
+extension UIColor{
+    static var myCyan:UIColor{
+        UIColor(red: 0, green: 246/255, blue: 255/255, alpha: 1)
+    }
+    
+    static var myMagenta:UIColor{
+        UIColor(red: 1, green: 0, blue: 106/255, alpha: 1)
+    }
+    
+}
