@@ -33,4 +33,14 @@ extension UIColor{
         UIColor(red: 1, green: 0, blue: 106/255, alpha: 1)
     }
     
+    
+    
+}
+
+
+extension CGFloat {
+    func map(from: ClosedRange<CGFloat>, to: ClosedRange<CGFloat>) -> CGFloat {
+        let result = ((self - from.lowerBound) / (from.upperBound - from.lowerBound)) * (to.upperBound - to.lowerBound) + to.lowerBound
+        return result
+    }
 }

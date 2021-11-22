@@ -16,9 +16,11 @@ class JoyStickController: UIViewController {
     let jsCenterView = UIView()
     let bnCenterView = UIView()
     let buttonView = UIView()
-    
-    //let myCyan = UIColor(red: 0, green: 246/255, blue: 255/255, alpha: 1)
-   // let myMagenta = UIColor(red: 1, green: 0, blue: 106/255, alpha: 1)
+    var ble = BLEController()
+    private var stateView: StateView?
+    let notificationCenter = NotificationCenter.default
+    private var displayLink:CADisplayLink?
+    var pressed = false
     override func viewDidLoad() {
         super.viewDidLoad()
         let js = 2.0
@@ -46,7 +48,7 @@ class JoyStickController: UIViewController {
                                     width: self.view.frame.height/2, height: self.view.frame.height/2)
         view.addSubview(bnCenterView)
         bnCenterView.center.x = self.view.frame.width - self.view.frame.width/4
-//        let pushGesture = UITapGestureRecognizer(target: self, action: #selector(pushGesture(_:)))
+
         let pushGesture = UILongPressGestureRecognizer(target: self, action: #selector(pushGesture(_:)))
         pushGesture.minimumPressDuration = 0.1
         buttonView.isUserInteractionEnabled = true
@@ -60,31 +62,123 @@ class JoyStickController: UIViewController {
         buttonView.center.y = bnCenterView.frame.midY - (bnCenterView.frame.height/16)
         view.addSubview(buttonView)
         
-        let button = UIButton(frame: CGRect(x: 20, y: 20, width: 200, height: 60))
-         button.setTitle("Email", for: .normal)
-         button.backgroundColor = .white
-         button.setTitleColor(UIColor.black, for: .normal)
-         button.addTarget(self, action: #selector(self.buttonTapped), for: .touchUpInside)
-        self.view.addSubview(button)
-        self.view.backgroundColor = .black
+     
+        self.view.backgroundColor = .darkText
+        
+        notificationCenter.addObserver(self, selector: #selector(quitJoystick), name: UIApplication.willResignActiveNotification, object: nil)
+        launchBLE()
+        createUI()
     }
     
-   @objc func buttonTapped(sender:UIButton!) {
-       self.dismiss(animated: true, completion: nil)
+    func createDisplayLink() {
+        if let _ = displayLink {
+            displayLink?.isPaused = false
+        }else{
+            // something that should only happen if xyz is not nil
+            print("found null")
+            displayLink = CADisplayLink(target: self,
+                                            selector: #selector(step))
+            displayLink?.add(to: .current,
+                            forMode: .common)
+        }
+       
+        
+       
     }
+    
+    @objc func step(){
+       // print("feefooe")
+        let t = (joystickView.layer.presentation()?.frame.midX ?? 0) - (jsCenterView.center.x)
+       // print(t)
+        self.mapSendDirectionOutput(inValue: t)
+       
+    }
+    
+    func createUI(){
+ 
+        stateView = StateView.init(frame: CGRect(x: 0,y: self.view.frame.height/32, width:self.view.frame.width/2, height: self.view.frame.height / 6))
+        stateView?.center.x = self.view.frame.midX
+        //stateView?.backgroundColor = .blue
+        self.view.addSubview(stateView!)
+        stateView?.killConnection = {
+            self.quitJoystick()
+        
+        }
+    }
+    
+    
+ 
+    
+    func launchBLE(){
+        print("launch ble")
+        ble.connect()
+        ble.connectionChanged = { [unowned self] value in
+            let v = value as connectionStatus
+            if(v == .disconnected){
+                self.quitJoystick()
+                print("disconnected")
+            }
+            //self.stateManager(state: value)
+            stateView?.setStatus(con: v)
+            print(v)
+        }
+        
+    }
+    
+    @objc func quitJoystick(){
+        print("quitting")
+             
+             if(ble.isConnected() == true){
+                 ble.disconnect()
+                // triedButFailed = false
+             }
+         
+
+       
+        notificationCenter.removeObserver(self, name:UIApplication.willResignActiveNotification, object: nil)
+         self.dismiss(animated: true, completion: nil)
+       
+        if let _ = displayLink{
+            displayLink?.invalidate()
+        }
+        
+    }
+    
+    func mapSendDirectionOutput(inValue:CGFloat){
+        
+        let sp = inValue.map(from: -((jsCenterView.frame.width)/2) ... ((jsCenterView.frame.width)/2), to: -255 ... 255)
+        var p = 0
+        if(self.pressed == true){
+            p = 1
+        }
+        let m = SprinkleMessage(pos: sp, hit:p)
+        ble.sendData(message: m)
+        }
+    
+  
     
     @objc func pushGesture(_ sender: UIGestureRecognizer){
         
         //print("tapped")
         buttonView.backgroundColor = .myCyan
+        if(sender.state == UIGestureRecognizer.State.began){
+            
+            self.pressed = true
+            let s = SprinkleMessage(pos: 0, hit: 1)
+            self.ble.sendData(message: s)
+        }
         if(sender.state == UIGestureRecognizer.State.ended){
             buttonView.backgroundColor = .myMagenta
-            UIView.animate(withDuration: 0.25, delay: 0.0, options: .curveEaseInOut, animations: {
+            self.pressed = false
+            let s = SprinkleMessage(pos: 0, hit: 0)
+            self.ble.sendData(message: s)
+            UIView.animate(withDuration: 0.15, delay: 0.0, options: .curveEaseInOut, animations: {
                 self.buttonView.center.y = self.bnCenterView.frame.midY - (self.bnCenterView.frame.height/16)
+                
                 //self.joystickView.backgroundColor = self.myMagenta
             })
         }else{
-            UIView.animate(withDuration: 0.05, delay: 0.0, options: .curveEaseInOut, animations: {
+            UIView.animate(withDuration: 0.01, delay: 0.0, options: .curveEaseInOut, animations: {
                 self.buttonView.center.y = self.bnCenterView.frame.midY
                 //self.joystickView.backgroundColor = self.myMagenta
             })
@@ -92,22 +186,44 @@ class JoyStickController: UIViewController {
     }
 
     @objc func dragJoystick(_ sender: UIPanGestureRecognizer) {
-        var pos = sender.location(in:self.view).x
-        print("\(pos): \(jsCenterView.frame.midX + jsCenterView.frame.width/2)" )
-        if(pos > jsCenterView.frame.midX + jsCenterView.frame.width/2){
-            pos = jsCenterView.frame.midX + jsCenterView.frame.width/2
-        }else if(pos < jsCenterView.frame.midX - jsCenterView.frame.width/2){
-            pos = jsCenterView.frame.midX - jsCenterView.frame.width/2
+        var pos = sender.location(in:jsCenterView).x - (jsCenterView.frame.width / 2)
+       // print(sender.location(in:jsCenterView).x - (jsCenterView.frame.width / 2))
+       
+       // print(out)
+//        if(pos > jsCenterView.frame.midX + jsCenterView.frame.width/2){
+//            pos = jsCenterView.frame.midX + jsCenterView.frame.width/2
+//        }else if(pos < jsCenterView.frame.midX - jsCenterView.frame.width/2){
+//            pos = jsCenterView.frame.midX - jsCenterView.frame.width/2
+//        }
+        
+        if(pos > jsCenterView.frame.width / 2){
+            pos = jsCenterView.frame.width / 2
         }
+        
+        if(pos < -jsCenterView.frame.width / 2){
+            pos = -jsCenterView.frame.width / 2
+        }
+     //   print(pos)
         joystickView.backgroundColor = .myCyan
         joystickView.layer.removeAllAnimations()
-        joystickView.center.x = pos
-        let p = abs(pos-jsCenterView.frame.midX)
-        print(p)
+        joystickView.center.x = jsCenterView.center.x + pos
+       // mapSendDirectionOutput(inValue: pos)
+        if(sender.state == UIGestureRecognizer.State.began){
+            self.createDisplayLink()
+        }
         if(sender.state == UIGestureRecognizer.State.ended){
+            let p = abs(pos)
             UIView.animate(withDuration: p/500, delay: 0.0, options: .curveEaseInOut, animations: {
                 self.joystickView.center.x = self.jsCenterView.frame.midX
                 self.joystickView.backgroundColor = .myMagenta
+               
+            }, completion: {_ in
+               // print("feefoo")
+               // t.invalidate()
+              //  self.displayLink?.invalidate()
+                self.displayLink?.isPaused = true
+                let s = SprinkleMessage(pos: 0, hit: 0)
+                self.ble.sendData(message: s)
             })
         }
     }

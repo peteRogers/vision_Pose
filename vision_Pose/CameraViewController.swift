@@ -29,6 +29,8 @@ class CameraViewController: UIViewController {
     var visionToAVFTransform = CGAffineTransform.identity
     
     var ble = BLEController()
+    let notificationCenter = NotificationCenter.default
+   
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +40,7 @@ class CameraViewController: UIViewController {
        // let value = UIInterfaceOrientation.landscapeRight.rawValue
        // UIDevice.current.setValue(value, forKey: "orientation")
       //  print()
+        notificationCenter.addObserver(self, selector: #selector(quitCamera), name: UIApplication.willResignActiveNotification, object: nil)
         launchBLE()
        
     }
@@ -55,10 +58,11 @@ class CameraViewController: UIViewController {
             stateView?.setStatus(con: v)
             print(v)
         }
+      
         
     }
     
-    func quitCamera(){
+   @objc func quitCamera(){
        print("quitting")
             
             if(ble.isConnected() == true){
@@ -75,7 +79,7 @@ class CameraViewController: UIViewController {
         self.cameraFeedView.removeFromSuperview()
         self.dismiss(animated: true, completion: nil)
         self.removeFromParent()
-  
+       notificationCenter.removeObserver(self, name:UIApplication.willResignActiveNotification, object: nil)
     }
     
     func recognizeHumans(request:VNRequest, error: Error?){
@@ -96,7 +100,10 @@ class CameraViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         // Stop capture session if it's running
+        
+        
         cameraFeedSession?.stopRunning()
+        ble.disconnect()
        print("view disapeared maybe")
     }
     
@@ -180,16 +187,12 @@ class CameraViewController: UIViewController {
         //stateView?.backgroundColor = .blue
         self.view.addSubview(stateView!)
         stateView?.killConnection = {
-            self.quitAction()
+            self.quitCamera()
         
         }
     }
     
-    
-    @objc func quitAction() {
-       print("Button pressed")
-        quitCamera()
-    }
+
 
 
     func setupVideoOutputView(_ videoOutputView: UIView) {

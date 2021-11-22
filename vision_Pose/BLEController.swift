@@ -39,7 +39,7 @@ final class BLEController: NSObject, CBCentralManagerDelegate,  CBPeripheralDele
                   
                     if let dataToSend = s.data(using: String.Encoding.utf8){
                         if(p.state == .connected){
-                            if(hasUpdated == true){
+                            if(hasUpdated == true || Int(message.pos) == 0){
                                 hasUpdated = false
                                 
                                // print("has sent \(s)")
