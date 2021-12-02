@@ -74,8 +74,7 @@ class JoyStickController: UIViewController {
         if let _ = displayLink {
             displayLink?.isPaused = false
         }else{
-            // something that should only happen if xyz is not nil
-            print("found null")
+          
             displayLink = CADisplayLink(target: self,
                                             selector: #selector(step))
             displayLink?.add(to: .current,
@@ -87,18 +86,14 @@ class JoyStickController: UIViewController {
     }
     
     @objc func step(){
-       // print("feefooe")
         let t = (joystickView.layer.presentation()?.frame.midX ?? 0) - (jsCenterView.center.x)
-       // print(t)
         self.mapSendDirectionOutput(inValue: t)
-       
     }
     
     func createUI(){
  
         stateView = StateView.init(frame: CGRect(x: 0,y: self.view.frame.height/32, width:self.view.frame.width/2, height: self.view.frame.height / 6))
         stateView?.center.x = self.view.frame.midX
-        //stateView?.backgroundColor = .blue
         self.view.addSubview(stateView!)
         stateView?.killConnection = {
             self.quitJoystick()
@@ -118,30 +113,23 @@ class JoyStickController: UIViewController {
                 self.quitJoystick()
                 print("disconnected")
             }
-            //self.stateManager(state: value)
             stateView?.setStatus(con: v)
-            print(v)
         }
-        
     }
     
     @objc func quitJoystick(){
         print("quitting")
-             
-             if(ble.isConnected() == true){
-                 ble.disconnect()
-                // triedButFailed = false
-             }
-         
-
-       
+        
+        if(ble.isConnected() == true){
+            ble.disconnect()
+            
+        }
         notificationCenter.removeObserver(self, name:UIApplication.willResignActiveNotification, object: nil)
-         self.dismiss(animated: true, completion: nil)
-       
+        self.dismiss(animated: true, completion: nil)
+        
         if let _ = displayLink{
             displayLink?.invalidate()
         }
-        
     }
     
     func mapSendDirectionOutput(inValue:CGFloat){
@@ -151,8 +139,9 @@ class JoyStickController: UIViewController {
         if(self.pressed == true){
             p = 1
         }
-        let m = SprinkleMessage(pos: sp, hit:p)
-        ble.sendData(message: m)
+        let m = SprinkleMessage(pos: sp, hit: p, hitMessage: 0)
+        
+        ble.addData(message: m)
         }
     
   
@@ -162,39 +151,28 @@ class JoyStickController: UIViewController {
         //print("tapped")
         buttonView.backgroundColor = .myCyan
         if(sender.state == UIGestureRecognizer.State.began){
-            
             self.pressed = true
-            let s = SprinkleMessage(pos: 0, hit: 1)
-            self.ble.sendData(message: s)
+            let s = SprinkleMessage(pos: 0, hit: 1,hitMessage: 1)
+            self.ble.addData(message: s)
+            
         }
         if(sender.state == UIGestureRecognizer.State.ended){
             buttonView.backgroundColor = .myMagenta
             self.pressed = false
-            let s = SprinkleMessage(pos: 0, hit: 0)
-            self.ble.sendData(message: s)
+            let s = SprinkleMessage(pos: 0, hit: 0, hitMessage: 1)
+            self.ble.addData(message: s)
             UIView.animate(withDuration: 0.15, delay: 0.0, options: .curveEaseInOut, animations: {
                 self.buttonView.center.y = self.bnCenterView.frame.midY - (self.bnCenterView.frame.height/16)
-                
-                //self.joystickView.backgroundColor = self.myMagenta
             })
         }else{
             UIView.animate(withDuration: 0.01, delay: 0.0, options: .curveEaseInOut, animations: {
                 self.buttonView.center.y = self.bnCenterView.frame.midY
-                //self.joystickView.backgroundColor = self.myMagenta
             })
         }
     }
 
     @objc func dragJoystick(_ sender: UIPanGestureRecognizer) {
         var pos = sender.location(in:jsCenterView).x - (jsCenterView.frame.width / 2)
-       // print(sender.location(in:jsCenterView).x - (jsCenterView.frame.width / 2))
-       
-       // print(out)
-//        if(pos > jsCenterView.frame.midX + jsCenterView.frame.width/2){
-//            pos = jsCenterView.frame.midX + jsCenterView.frame.width/2
-//        }else if(pos < jsCenterView.frame.midX - jsCenterView.frame.width/2){
-//            pos = jsCenterView.frame.midX - jsCenterView.frame.width/2
-//        }
         
         if(pos > jsCenterView.frame.width / 2){
             pos = jsCenterView.frame.width / 2
@@ -203,11 +181,9 @@ class JoyStickController: UIViewController {
         if(pos < -jsCenterView.frame.width / 2){
             pos = -jsCenterView.frame.width / 2
         }
-     //   print(pos)
         joystickView.backgroundColor = .myCyan
         joystickView.layer.removeAllAnimations()
         joystickView.center.x = jsCenterView.center.x + pos
-       // mapSendDirectionOutput(inValue: pos)
         if(sender.state == UIGestureRecognizer.State.began){
             self.createDisplayLink()
         }
@@ -218,13 +194,10 @@ class JoyStickController: UIViewController {
                 self.joystickView.backgroundColor = .myMagenta
                
             }, completion: {_ in
-               // print("feefoo")
-               // t.invalidate()
-              //  self.displayLink?.invalidate()
                 self.displayLink?.isPaused = true
-                let s = SprinkleMessage(pos: 0, hit: 0)
-                self.ble.sendData(message: s)
-            })
-        }
+                let s = SprinkleMessage(pos: 0, hit: 0, hitMessage:0)
+                self.ble.addData(message: s)
+        })
+                           }
     }
 }

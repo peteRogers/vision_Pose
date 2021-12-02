@@ -8,9 +8,13 @@
 import Foundation
 import UIKit
 
-struct SprinkleMessage {
+struct SprinkleMessage: Equatable{
     let pos:CGFloat
     let hit:Int
+    let hitMessage:Int
+    static func == (lhs: SprinkleMessage, rhs: SprinkleMessage) -> Bool {
+            return lhs.pos == rhs.pos
+        }
 }
 
 
