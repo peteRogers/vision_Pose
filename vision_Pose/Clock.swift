@@ -28,7 +28,7 @@ class Clock {
             if(self.isFast == true){
             self.cTime = Date.now
             }else{
-                self.cTime = self.cTime.addingTimeInterval(0.2)
+                //self.cTime = self.cTime.addingTimeInterval(0.2)
             }
         })
         }

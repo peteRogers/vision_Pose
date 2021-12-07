@@ -35,7 +35,7 @@ class ViewController: UIViewController {
     
     @IBAction func actionConnect(_ sender: UIButton) {
         cameraViewController = CameraViewController()
-        cameraViewController?.view.frame = view.bounds
+        cameraViewController?.view.frame = view.frame
         do {
        
             try cameraViewController?.setupAVSession()
@@ -45,7 +45,7 @@ class ViewController: UIViewController {
                    }
         
         cameraViewController?.view.frame = view.bounds
-        
+        cameraViewController?.modalPresentationStyle = .fullScreen 
         self.present(cameraViewController!, animated: true, completion: nil)
         
     }
