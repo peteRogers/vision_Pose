@@ -20,16 +20,6 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-       
-       // addChild(cameraViewController)
-       
-      // cameraViewController.beginAppearanceTransition(true, animated: true)
-        //view.addSubview(cameraViewController.view)
-      //  cameraViewController.endAppearanceTransition()
-       // cameraViewController.didMove(toParent: self)
-        
-        // Do any additional setup after loading the view.
     }
 
     @IBAction func actionConnectManual(_ sender: UIButton) {
@@ -52,8 +42,7 @@ class ViewController: UIViewController {
                    } catch {
                       // AppError.display(error, inViewController: self)
                    }
-       // cameraViewController.view.frame = view.bounds
-       // camer
+        
         cameraViewController?.view.frame = view.bounds
         
         self.present(cameraViewController!, animated: true, completion: nil)

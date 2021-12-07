@@ -34,12 +34,7 @@ class CameraViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-       
-       // pass("foof")
         request = VNDetectHumanRectanglesRequest(completionHandler: recognizeHumans)
-       // let value = UIInterfaceOrientation.landscapeRight.rawValue
-       // UIDevice.current.setValue(value, forKey: "orientation")
-      //  print()
         notificationCenter.addObserver(self, selector: #selector(quitCamera), name: UIApplication.willResignActiveNotification, object: nil)
         launchBLE()
        
@@ -67,15 +62,9 @@ class CameraViewController: UIViewController {
             
             if(ble.isConnected() == true){
                 ble.disconnect()
-               // triedButFailed = false
+               
             }
-        
-//            videoView?.videoCapture.stop()
-//            videoView?.removeFromSuperview()
-//            videoView = nil
-//            UIApplication.shared.isIdleTimerDisabled = false
-//            egg.stopAll()
-       // self.dismiss(animated: true, completion: nil)
+
         self.cameraFeedView.removeFromSuperview()
         self.dismiss(animated: true, completion: nil)
         self.removeFromParent()
@@ -181,19 +170,14 @@ class CameraViewController: UIViewController {
     }
     
     func createUI(){
- 
         stateView = StateView.init(frame: CGRect(x: 0,y: self.view.frame.height/32, width:self.view.frame.width/2, height: self.view.frame.height / 6))
         stateView?.center.x = self.view.frame.midX
-        //stateView?.backgroundColor = .blue
         self.view.addSubview(stateView!)
         stateView?.killConnection = {
             self.quitCamera()
-        
         }
     }
     
-
-
 
     func setupVideoOutputView(_ videoOutputView: UIView) {
         videoOutputView.translatesAutoresizingMaskIntoConstraints = false
@@ -235,8 +219,6 @@ class CameraViewController: UIViewController {
         DispatchQueue.main.async {
             let layer = self.cameraFeedView.previewLayer
             self.removeBoxes()
-           
-           
             for boxGroup in boxGroups {
                 let color = boxGroup.color
                 for box in boxGroup.boxes {
