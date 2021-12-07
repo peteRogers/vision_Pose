@@ -141,7 +141,7 @@ class JoyStickController: UIViewController {
         }
         let m = SprinkleMessage(pos: sp, hit: p, hitMessage: 0)
         
-        ble.addData(message: m)
+      //  ble.addData(message: m)
         }
     
   
@@ -153,14 +153,14 @@ class JoyStickController: UIViewController {
         if(sender.state == UIGestureRecognizer.State.began){
             self.pressed = true
             let s = SprinkleMessage(pos: 0, hit: 1,hitMessage: 1)
-            self.ble.addData(message: s)
+           // self.ble.addData(message: s)
             
         }
         if(sender.state == UIGestureRecognizer.State.ended){
             buttonView.backgroundColor = .myMagenta
             self.pressed = false
             let s = SprinkleMessage(pos: 0, hit: 0, hitMessage: 1)
-            self.ble.addData(message: s)
+           // self.ble.addData(message: s)
             UIView.animate(withDuration: 0.15, delay: 0.0, options: .curveEaseInOut, animations: {
                 self.buttonView.center.y = self.bnCenterView.frame.midY - (self.bnCenterView.frame.height/16)
             })
@@ -196,7 +196,7 @@ class JoyStickController: UIViewController {
             }, completion: {_ in
                 self.displayLink?.isPaused = true
                 let s = SprinkleMessage(pos: 0, hit: 0, hitMessage:0)
-                self.ble.addData(message: s)
+               // self.ble.addData(message: s)
         })
                            }
     }

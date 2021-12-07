@@ -29,13 +29,9 @@ final class BLEController: NSObject, CBCentralManagerDelegate,  CBPeripheralDele
     
     
     
+   
     
-    func addData(message:SprinkleMessage){
-        chooseArray(message: message)
-        sendData()
-    }
-    
-    func sendData(){
+    func sendData(message:Int){
         if central != nil{
             if let p = myPeripheral{
                 if let mc = mainCharacteristic{
@@ -45,26 +41,14 @@ final class BLEController: NSObject, CBCentralManagerDelegate,  CBPeripheralDele
                             hasUpdated = false
                             
                             var s:String?
-                            if let a = priorityList.first{
-                                print("priority detected")
-                                s = "\(String(describing: Int(a.pos)))>\(String(describing: a.hit))>\(String(describing: a.hitMessage))><"
-                                print("\(String(describing: s)) : \(priorityList.count)")
-                                priorityList.removeFirst()
-                                
-                            }else{
-                                if let a = slowList.last{
-                                    print("slowList detected")
-                                    s = "\(String(describing: Int(a.pos)))>\(String(describing: a.hit))>\(String(describing: a.hitMessage))><"
-                                    slowList.removeAll()
-                                }
-                            }
-                            
+                            s = "\(message)><"
                             if let dataToSend = s?.data(using: String.Encoding.utf8){
                                 
                                 print(s ?? "none")
                                 p.writeValue(dataToSend, for:mc, type: CBCharacteristicWriteType.withResponse)
                             }
-                        }
+                                
+                            }
                     }
                 }
             }else{
@@ -73,12 +57,7 @@ final class BLEController: NSObject, CBCentralManagerDelegate,  CBPeripheralDele
         }else{
             //  print("no central connection")
         }
-        if(priorityList.isEmpty == false){
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.sendData()
-            }
-            
-        }
+       
     }
     
     

@@ -16,7 +16,7 @@ class StateView: UIView {
    
     private var mainButton:UIButton?
     var killConnection: (() -> Void)?
-    
+   
    
     func setStatus(con:connectionStatus){
         if(con == .connected){
@@ -41,6 +41,7 @@ class StateView: UIView {
         mainButton?.addTarget(self,
                                action: #selector(quitAction),
                                for: .touchUpInside)
+      
     }
     
     

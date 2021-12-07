@@ -16,8 +16,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H4A-qV-HKV">
-                                <rect key="frame" x="313.5" y="77.5" width="269" height="41.5"/>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H4A-qV-HKV">
+                                <rect key="frame" x="314" y="187" width="269" height="41.5"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="CAMERA CONNECT">
                                     <fontDescription key="titleFontDescription" style="UICTFontTextStyleBody"/>
@@ -26,31 +26,18 @@
                                     <action selector="actionConnect:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9Sn-IF-qHH"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Goj-hn-zpk">
-                                <rect key="frame" x="313.5" y="176" width="269" height="41"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="MANUAL CONNECT"/>
-                                <connections>
-                                    <action selector="actionConnectManual:" destination="BYZ-38-t0r" eventType="touchUpInside" id="wyf-Hb-HkT"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemTealColor"/>
                         <constraints>
                             <constraint firstItem="H4A-qV-HKV" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" multiplier="0.3" id="9de-8q-apo"/>
-                            <constraint firstItem="Goj-hn-zpk" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="JXk-js-viy"/>
-                            <constraint firstItem="Goj-hn-zpk" firstAttribute="width" secondItem="H4A-qV-HKV" secondAttribute="width" id="LZK-vA-icR"/>
                             <constraint firstItem="H4A-qV-HKV" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="iMO-a5-8vJ"/>
-                            <constraint firstItem="Goj-hn-zpk" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="iso-5j-UwU"/>
-                            <constraint firstItem="Goj-hn-zpk" firstAttribute="height" secondItem="H4A-qV-HKV" secondAttribute="height" id="lp2-CD-RwF"/>
                             <constraint firstItem="H4A-qV-HKV" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="0.5" id="tTL-0Z-3FX"/>
                             <constraint firstItem="H4A-qV-HKV" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" multiplier="0.1" id="z7p-rQ-gdC"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="connectButton" destination="H4A-qV-HKV" id="Hl5-3l-zbs"/>
-                        <outlet property="manualConnectButton" destination="Goj-hn-zpk" id="JBj-cY-1Tl"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

@@ -27,9 +27,11 @@ class CameraViewController: UIViewController {
     private var stateView: StateView?
     var request: VNDetectHumanRectanglesRequest!
     var visionToAVFTransform = CGAffineTransform.identity
-    
+    var clock:Clock?
     var ble = BLEController()
     let notificationCenter = NotificationCenter.default
+    
+    var clockView: ClockView?
    
 
     override func viewDidLoad() {
@@ -37,6 +39,9 @@ class CameraViewController: UIViewController {
         request = VNDetectHumanRectanglesRequest(completionHandler: recognizeHumans)
         notificationCenter.addObserver(self, selector: #selector(quitCamera), name: UIApplication.willResignActiveNotification, object: nil)
         launchBLE()
+        clock = Clock()
+       // let c = Clock()
+       // clock?.startTimer()
        
     }
     
@@ -77,6 +82,19 @@ class CameraViewController: UIViewController {
         guard let results = request.results as? [VNHumanObservation] else {
             return
         }
+        
+        if(results.count > 0){
+           // print("d")
+            self.clock?.isFast = false
+            ble.sendData(message: 1)
+        }else{
+            self.clock?.isFast = true
+            ble.sendData(message: 0)
+        }
+        DispatchQueue.main.async {
+            self.clockView?.text?.text = self.clock?.cTime.dateAndTimetoString()
+        }
+        
         for result in results{
           //  print(result.boundingBox.minX)
             redBoxes.append(result.boundingBox)
@@ -176,6 +194,9 @@ class CameraViewController: UIViewController {
         stateView?.killConnection = {
             self.quitCamera()
         }
+        
+        clockView = ClockView.init(frame: self.view.frame)
+        self.view.addSubview(clockView!)
     }
     
 
